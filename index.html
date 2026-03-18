@@ -175,7 +175,7 @@
   .live-badge {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.06em;
@@ -821,6 +821,9 @@ async function fetchData() {
     pipeline.style.display = 'grid';
     updateIndicator.classList.remove('visible');
 
+    // Starta auto-scroll på TV efter rendering
+    setTimeout(() => window._startAutoScroll?.(), 1000);
+
     document.getElementById('last-updated').textContent =
       `Senast uppdaterad: ${new Date().toLocaleString('sv-SE')}`;
 
@@ -884,6 +887,56 @@ dots.forEach(dot => {
     pipeline.scrollTo({ left: i * pipeline.offsetWidth, behavior: 'smooth' });
   });
 });
+
+// Auto-scroll kolumner på TV
+function startColumnAutoScroll() {
+  if (window.innerWidth < 1200) return; // Bara på TV/desktop
+
+  const bodies = document.querySelectorAll('.stage-body');
+  const SPEED = 0.4;        // px per frame – lugnt tempo
+  const PAUSE_MS = 2000;    // paus i topp/botten innan riktningsbyte
+
+  bodies.forEach(body => {
+    let direction = 1;
+    let pausing = false;
+    let pauseTimer = null;
+
+    function step() {
+      if (pausing) return;
+
+      const maxScroll = body.scrollHeight - body.clientHeight;
+      if (maxScroll <= 0) return; // Inget att scrolla
+
+      body.scrollTop += SPEED * direction;
+
+      if (body.scrollTop >= maxScroll - 1) {
+        body.scrollTop = maxScroll;
+        pausing = true;
+        pauseTimer = setTimeout(() => {
+          direction = -1;
+          pausing = false;
+        }, PAUSE_MS);
+      } else if (body.scrollTop <= 0) {
+        body.scrollTop = 0;
+        pausing = true;
+        pauseTimer = setTimeout(() => {
+          direction = 1;
+          pausing = false;
+        }, PAUSE_MS);
+      }
+    }
+
+    // Starta med en liten fördröjning per kolumn för att de inte rör sig synkront
+    const offset = Array.from(bodies).indexOf(body) * 800;
+    setTimeout(() => {
+      setInterval(step, 16); // ~60fps
+    }, offset);
+  });
+}
+
+// Starta auto-scroll när data laddats
+const _origRender = window._autoScrollStarted;
+window._startAutoScroll = startColumnAutoScroll;
 
 if (sessionStorage.getItem('tt_auth') === '1') init();
 </script>
