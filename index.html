@@ -41,7 +41,12 @@
   /* Login */
   #login-screen {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
     background: var(--bg);
     z-index: 100;
     display: flex;
@@ -164,7 +169,7 @@
   .header-right {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 24px;
   }
 
   .live-badge {
@@ -360,9 +365,14 @@
     .stage-count { font-size: 16px; width: 28px; height: 28px; }
   }
 
-  /* TV / large screens – show fullscreen button */
+  /* TV / large screens */
   @media (min-width: 1200px) {
-    #fullscreen-btn { display: flex; }
+    #fullscreen-btn { display: none !important; }
+    .header-right { gap: 28px; }
+    #refresh-countdown { 
+      padding-right: 8px;
+      border-right: 1px solid var(--border);
+    }
   }
 
   .stage-header {
@@ -512,7 +522,7 @@
     </div>
   </header>
 
-  <div id="status-message">
+  <div id="status-message" style="display:none">
     <div style="display:flex;align-items:center;gap:10px;justify-content:center">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite;opacity:0.4">
         <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
