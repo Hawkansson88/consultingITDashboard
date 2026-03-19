@@ -635,6 +635,11 @@ async function handleLogin() {
   if (hash === PASSWORD_HASH) {
     sessionStorage.setItem('tt_auth', '1');
     document.getElementById('login-screen').style.display = 'none';
+    setTimeout(() => {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }, 100);
     init();
   } else {
     errorEl.textContent = 'Fel lösenord.';
