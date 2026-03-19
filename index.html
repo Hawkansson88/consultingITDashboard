@@ -123,10 +123,15 @@
 
   /* Layout */
   .wrapper {
-    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     flex-direction: column;
     padding: 20px 28px;
+    overflow: hidden;
   }
 
   /* Header */
@@ -305,11 +310,9 @@
 
   /* Mobile */
   @media (max-width: 768px) {
-    html, body { overflow: hidden; scroll-behavior: auto; }
+    html, body { overflow: hidden; scroll-behavior: auto; position: fixed; width: 100%; }
     .wrapper {
       padding: 14px 12px 10px;
-      height: 100dvh;
-      overflow: hidden;
     }
     header { margin-bottom: 12px; padding-bottom: 10px; }
     .header-divider, .header-title span { display: none; }
